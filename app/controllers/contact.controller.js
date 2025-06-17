@@ -1,6 +1,26 @@
 exports.create = (req, res) => {
-  res.send({ message: "create handler" });
+  const { name, email, phone } = req.body;
+
+  if (!name || !email || !phone) {
+    return res.status(400).send({
+      message: "Missing required fields: name, email, or phone",
+    });
+  }
+
+  // Tạm lưu local (nếu chưa kết nối DB)
+  const newContact = {
+    id: Date.now(),
+    name,
+    email,
+    phone,
+  };
+
+  res.status(201).send({
+    message: "Contact created successfully",
+    data: newContact,
+  });
 };
+
 exports.findAll = (req, res) => {
   res.send({ message: "findAll handler" });
 };

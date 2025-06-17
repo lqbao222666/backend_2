@@ -5,6 +5,5 @@ class ApiError extends Error {
     this.message = message;
   }
 }
-const ApiError = require("./app/app");
 
 module.exports = ApiError;
