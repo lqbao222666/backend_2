@@ -9,7 +9,7 @@ exports.create = async (req, res, next) => {
   }
 
   try {
-    const contactService = new contactService(MongoDB.client);
+    const contactService = new ContactService(MongoDB.client);
     const document = await contactService.create(req.body);
     return res.send(document);
   } catch (error) {
@@ -26,7 +26,7 @@ exports.findAll = async (req, res, next) => {
     const contactService = new ContactService(MongoDB.client);
     const { name } = req.query;
     if (name) {
-      documents = await contactService.findbyName(name);
+      documents = await contactService.findByName(name);
     } else {
       documents = await contactService.find({});
     }
@@ -41,7 +41,7 @@ exports.findAll = async (req, res, next) => {
 exports.findOne = async (req, res, next) => {
   try {
     const contactService = new ContactService(MongoDB.client);
-    const document = await contactService.findById(req.params.id);
+    const document = await contactService.findByID(req.params.id);
     if (!document) {
       return next(new ApiError(404, "Contact not found"));
     }
@@ -65,6 +65,8 @@ exports.update = async (req, res, next) => {
     }
     return res.send({ message: "Contact was updated successfully" });
   } catch (error) {
+    console.error("Lỗi cập nhật contact:", error); // Thêm log
+
     return next(
       new ApiError(500, `Error updating contact with id= ${req.params.id}`)
     );
@@ -101,11 +103,12 @@ exports.findAllFavorite = async (_req, res, next) => {
 exports.deleteAll = async (_req, res, next) => {
   try {
     const contactService = new ContactService(MongoDB.client);
-    const deletedCount = await ContactService.deleteAll();
+    const deletedCount = await contactService.deleteAll(); // ✅ sửa đúng dòng này
     return res.send({
       message: `${deletedCount} contacts were deleted successfully`,
     });
   } catch (error) {
+    console.error("Lỗi khi xóa tất cả liên hệ:", error); // thêm dòng này để debug nếu cần
     return next(
       new ApiError(500, "An error occurred while removing all contacts")
     );

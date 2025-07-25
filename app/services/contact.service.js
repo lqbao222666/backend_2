@@ -1,4 +1,4 @@
-const { ObjectId, ReturnDocument } = require("mongodb");
+const { ObjectId, returnDocument } = require("mongodb");
 
 class ContactService {
   constructor(client) {
@@ -50,7 +50,7 @@ class ContactService {
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
     };
     const update = this.extractContactData(payload);
-    const result = await this.Contact.insertOne(
+    const result = await this.Contact.findOneAndUpdate(
       filter,
       { $set: update },
       { returnDocument: "after" }
@@ -73,5 +73,6 @@ class ContactService {
     return result.deletedCount;
   }
 }
+// Le Quoc Bao B2203492
 
 module.exports = ContactService;
